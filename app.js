@@ -1,10 +1,12 @@
 const express = require("express");
-const yup = require("yup");
+const validate = require("./middlewares/validate.mw");
+
 //create application - server
 const app = express();
 const PORT = 3000;
-
 const users = [];
+
+app.use(express.json());
 
 //Routing
 // req- запит
@@ -13,22 +15,9 @@ app.get("/", (req, res) => {
   res.send("hi!");
 });
 
-const parse = express.json(); //next()
 
-const validete = async (req, res, next) => {
-  const validationSchemaUser = yup.object({
-    name: yup.string().trim().required(),
-    email: yup.string().trim().email().required(),
-    password: yup.string().trim().required(),
-    isMale: yup.boolean(),
-  });
-  try {
-    const valideteBody = await validationSchemaUser.validate(req.body);
-    next();
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-};
+
+
 let count =0; // для прикладу
 const create = (req, res) => {
   try {
@@ -44,9 +33,24 @@ const create = (req, res) => {
     res.status(404).send(error.message);
   }
 };
-app.post("/users", parse, validete, create);
-app.put("/users/0", parse, validete, create); // оновити певного користувача
-//app.delete()
+const update = (req, res) => {
+    try {
+        res.end();
+    } catch (error) {
+        res.status(404).send(error.message);
+    }
+};
+deleteUser = (req, res) => {
+    try {
+        res.end();
+    } catch (error) {
+        res.status(404).send(error.message);
+    }
+};
+
+app.post("/users", validate, create);
+app.put("/users/0", validate, update); // оновити певного користувача
+app.delete("/users/0", deleteUser)
 
 app.listen(PORT, () => {
   console.log("app start at port " + PORT);
