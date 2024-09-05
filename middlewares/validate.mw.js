@@ -5,9 +5,8 @@ const validationSchemaUser = yup.object({
     password: yup.string().trim().required(),
     isMale: yup.boolean(),
   });
-  
-module.exports = async (req, res, next) => {
 
+module.exports = async (req, res, next) => {
     try {
       const valideteBody = await validationSchemaUser.validate(req.body);
       next();
